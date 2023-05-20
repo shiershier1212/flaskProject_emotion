@@ -4,7 +4,6 @@ import re
 import time
 
 import requests
-from bs4 import BeautifulSoup
 from lxml import etree
 
 headers = {
@@ -18,7 +17,6 @@ def spider(product_url):
     product_id = ''  # 获取当前商品的商品id
     if match:
         product_id = match.group(1)
-    # print(product_id)
 
     comment_list = []  # 评论列表，每一项都是一个评论
 
@@ -50,11 +48,11 @@ def getProductInfo(product_url):
     if match:
         product_id = match.group(1)
 
-    page_text = requests.get(url=product_url,headers=headers).text
+    page_text = requests.get(url=product_url, headers=headers).text
     tree = etree.HTML(page_text)
 
     r = tree.xpath('//div[@class="sku-name"]/text()')
-    product_name = r[1].replace(' ','')
+    product_name = r[1].replace(' ', '')
 
     product_price = tree.xpath(f'//span[@class="price J-p-{product_id}"]/text()')
 
@@ -62,6 +60,6 @@ def getProductInfo(product_url):
 
     pattern2 = fr'<span class="price J-p-{product_id}">(\d+)\</span>'
     print(f'<span class="price J-p-{product_id}">')
-    match2 = re.search(pattern2,page_text)
+    match2 = re.search(pattern2, page_text)
     print(match2)
-    print(product_name,product_price)
+    print(product_name, product_price)

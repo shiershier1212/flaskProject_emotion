@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import sqlite3
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -76,9 +78,26 @@ if __name__ == '__main__':
     # }
 
     # product_url = 'https://item.jd.com/100015056401.html?bbtf=1'
-    product_url = 'https://item.jd.com/100005465673.html'
+    # product_url = 'https://item.jd.com/100005465673.html'
 
     # url = 'https://api.m.jd.com/?appid=item-v3&functionId=pc_club_productPageComments&client=pc&clientVersion=1.0.0&t=1684468692049&loginType=3&uuid=122270672.1683459379064608177886.1683459379.1684465032.1684468079.3&productId=100015056401&score=0&sortType=5&page=1&pageSize=10&isShadowSku=0&rid=0&fold=1&bbtf=1&shield='
     # spider(product_url)
 
     # getProductInfo(product_url)
+
+    conn = sqlite3.connect('./emtoin.db')
+    cur = conn.cursor()
+    sql = 'select account from user'
+    res = cur.execute(sql)
+    # print(res)
+    accountList = []
+    for row in res:
+        # print(row[0])
+        accountList.append(row[0])
+        # print(row[1])
+        # print(row[2])
+    # conn.commit()
+    if '101' in accountList:
+        print('yes')
+
+    conn.close()

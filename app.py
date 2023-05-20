@@ -1,5 +1,6 @@
 import json
 import re
+import sqlite3
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -124,6 +125,56 @@ def spider_():
         }
 
         return json.dumps(obj, indent=2, ensure_ascii=False)
+
+
+@app.route('/register', methods=['POST'])
+def register_():
+    req = request.json
+    print(req)
+    account = req['account']
+    password = req['password']
+
+    conn = sqlite3.connect('./emtoin.db')
+    cur = conn.cursor()
+    sql1 = 'select account from user'
+    res = cur.execute(sql1)
+    # accountList = []
+    for row in res:
+        # accountList.append(row[0])
+        if account == row[0]:
+            conn.close()
+            return '账号已经存在！'
+
+    # if account in accountList:
+    #     conn.close()
+    #     return '账号已经存在！'
+
+    sql2 = f'insert into user(account,password) values({account},{password})'
+    cur.execute(sql2)
+    conn.commit()
+    conn.close()
+    return '注册成功！'
+
+
+@app.route('/login', methods=['POST'])
+def login_():
+    req = request.json
+    account = req['account']
+    password = req['password']
+
+    conn = sqlite3.connect('./emtoin.db')
+    cur = conn.cursor()
+    sql1 = 'select account,password from user'
+    acc = cur.execute(sql1)
+    for row in acc:
+        if account == row[0] and password == row[1]:
+            conn.close()
+            return 'true'
+        if account == row[0] and password != row[1]:
+            conn.close()
+            return 'false'
+    conn.close()
+    return 'none'
 
 
 if __name__ == '__main__':
